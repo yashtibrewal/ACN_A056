@@ -16,8 +16,13 @@ public class Client {
     }
 
     void generateAck(Packet_ p) {
-        p.ack = 1;
-        p.data = "";
+        char ch[]=new char[20];
+        for (char c:ch)
+        {
+            c= '\u0000';
+        }
+        p.setAck((byte)1);
+        p.setData(ch);
     }
 
     public static void main(String[] args) throws IOException {
@@ -33,9 +38,13 @@ public class Client {
         
         //creating a dummy packet to test the sending
         Packet_ packet=new Packet_();
-        packet.data="Testing the packet";
-        packet.number=1;
-        packet.ack=0;
+        char ch[];
+        String temp="Text Packet";
+        ch=temp.toCharArray();
+//        ch=new char[]{'T','e','s','t',' ','P','a','c','k','e','t',' ',' ',' ',' ',' ',' ',' ',' ',' '};
+        packet.setData(ch);
+        packet.setSeq(1);
+        packet.setAck((byte)1);
 
         
         //sending the packet / writing the packet on the stream

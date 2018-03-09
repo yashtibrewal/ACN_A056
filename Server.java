@@ -23,7 +23,7 @@ public class Server {
     Packet_ receivePacket() {
         Packet_ dummy = new Packet_();
 
-        if (dummy.ack == 1) {
+        if (dummy.getAck() == 1) {
             update_cwnd();
         }
 
@@ -42,7 +42,11 @@ public class Server {
         ssthresh = cwnd / 2;
         cwnd = 1;
     }
-
+    /*
+    function(take in file path input)
+    return me the ot array
+    */
+    
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         try (
              
