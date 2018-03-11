@@ -1,31 +1,36 @@
-
 package Experiment7;
 
 import java.io.Serializable;
 import java.util.Arrays;
 
+public class Packet_ implements Serializable {
 
-public class Packet_ implements Serializable{
-    private char data[]=new char[20];
+    private char data[] = new char[20];
     //assume the size is fixed to 20 characters
     private byte ack;
     private int seq;
-    Packet_()
-    {
+
+    Packet_() {
+
+        ack = 0;
+        //making the characters in the packet 0
+        for (char d : data) {
+            d = Character.MIN_VALUE;
+        }
     }
     
-    public void printPacketDetails()
-    {
-        System.out.println("data "+Arrays.toString(data));
-        System.out.println("ack "+ack);
-        System.out.println("number "+seq);
+    
+    public void printPacketDetails() {
+        System.out.println("data " + Arrays.toString(data));
+        System.out.println("ack " + ack);
+        System.out.println("number " + seq);
     }
 
     public void setData(char[] data) {
         this.data = data;
     }
 
-    public void setAck  (byte ack) {
+    public void setAck(byte ack) {
         this.ack = ack;
     }
 
