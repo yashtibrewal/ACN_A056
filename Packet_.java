@@ -23,11 +23,20 @@ public class Packet_ implements Serializable {
     public void printPacketDetails() {
         System.out.println("data " + Arrays.toString(data));
         System.out.println("ack " + ack);
-        System.out.println("number " + seq);
+        System.out.println("sequence number " + seq);
     }
 
-    public void setData(char[] data) {
-        this.data = data;
+    public void setData(char[] data)throws Exception {
+        if(data.length>20)
+        {
+            System.out.println("Cannot have data more than 20 characters in a packet");
+            throw new Exception("Cannot have data more than 20 characters in a packet");
+        }
+        int i=0;
+        for(;i<data.length;i++)
+            this.data[i]=data[i];
+        for(;i<20;i++)
+            this.data[i]=Character.MIN_VALUE;
     }
 
     public void setAck(byte ack) {
