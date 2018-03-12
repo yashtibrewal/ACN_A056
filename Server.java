@@ -31,12 +31,12 @@ public class Server {
 
         //creating a stream to accept objects using the input stream
         objectReader = new ObjectInputStream(dis);
-        
-        //Creating an output stream
-        dout=new DataOutputStream(socket.getOutputStream());
-
-        //creating a stream to send object using the ouput stream
-        objectWriter=new ObjectOutputStream(dout);
+//        
+//        //Creating an output stream
+//        dout=new DataOutputStream(socket.getOutputStream());
+//
+//        //creating a stream to send object using the ouput stream
+//        objectWriter=new ObjectOutputStream(dout);
     }
 
     Packet_ receivepacket() {

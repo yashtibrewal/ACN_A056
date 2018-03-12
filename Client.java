@@ -28,13 +28,13 @@ public class Client {
         cwnd = 1.0;
         ssthresh = 4.0;
         buffer_size = 10;
-        
-        //Creating a input stream
-        dis = new DataInputStream(socket.getInputStream());
-
-        //creating a stream to accept objects using the input stream
-        objectReader = new ObjectInputStream(dis);
-        
+//        
+//        //Creating a input stream
+//        dis = new DataInputStream(socket.getInputStream());
+//
+//        //creating a stream to accept objects using the input stream
+//        objectReader = new ObjectInputStream(dis);
+//        
         
         //creating an output stream
         dout = new DataOutputStream(socket.getOutputStream());
