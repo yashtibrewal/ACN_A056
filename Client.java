@@ -28,20 +28,21 @@ public class Client {
         cwnd = 1.0;
         ssthresh = 4.0;
         buffer_size = 10;
-//        
-//        //Creating a input stream
-//        dis = new DataInputStream(socket.getInputStream());
-//
-//        //creating a stream to accept objects using the input stream
-//        objectReader = new ObjectInputStream(dis);
-//        
         
+        //Creating a input stream
+        dis = new DataInputStream(socket.getInputStream());
+
         //creating an output stream
         dout = new DataOutputStream(socket.getOutputStream());
 
+        //creating a stream to accept objects using the input stream
+        objectReader = new ObjectInputStream(dis);
+        
         //creating a stream for sending objects
         objectWriter = new ObjectOutputStream(socket.getOutputStream());
         
+        //the order of creation of these objects matter,
+        //the program enters a deadlock/infinite loop state if we place the initialization of objectReader between dis and dout
     }
 
     public void addPacketToBuffer(Packet_ packet_) {
@@ -60,31 +61,38 @@ public class Client {
         }
         return ob;//returning a copy of packet
     }
-
-    void sendPacket(Packet_ ob) {
+    
+    //sending the packet using the objectWriter channel
+    void sendPacket(Packet_ packet_) throws IOException {
+        objectWriter.writeObject(packet_);
     }
 
-    Packet_ receivePacket() {
-        Packet_ dummy = new Packet_();
+    Packet_ receivePacket() throws IOException, ClassNotFoundException {
+        Packet_ packet_ = (Packet_)objectReader.readObject();
 
-        if (dummy.getAck() == 1) {
+        if (packet_.getAck() == 1) {
             update_cwnd();
         }
 
-        return dummy;
+        return packet_;
     }
 
     void update_cwnd() {
         if (cwnd < ssthresh) {
             cwnd += 1.0;
+            System.out.println("cwnd updated to "+cwnd);
         } else {
             cwnd += 1 / cwnd;
+            System.out.println("cwnd updated to "+cwnd);
         }
     }
 
     void timeout() {
+        System.out.println("Time out triggered");
         ssthresh = cwnd / 2;
+        System.out.println("ssthread updated to "+ssthresh);
         cwnd = 1;
+        System.out.println("cwnd updated to "+cwnd);
     }
 
     
@@ -119,17 +127,22 @@ public class Client {
         
         
         
-        
-        //sending the packet / writing the packet on the stream
+        //sending and reciving the packets the packet on the stream
         for(int i=0;i<10;i++)
-            objectWriter.writeObject(p[i]);
+        {
+            sendPacket(p[i]);
+            Packet_ packet_=receivePacket();
+            packet_.printPacketDetails();
+        }
         
-            
-            //sending the packet / writing the packet on the stream
-        for(int i=0;i<10;i++)
-            objectWriter.writeObject(p[i]);
-            
-            
+        
+        Packet_ packet_=new Packet_();
+        char ch[]=new char[20];
+        ch[0]=Character.MAX_VALUE;
+        packet_.setData(ch);
+        sendPacket(packet_);//sending a packet to singnal a close connect
+        
+        
         dout.close();
     }
 

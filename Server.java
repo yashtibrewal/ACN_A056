@@ -29,23 +29,26 @@ public class Server {
         //Creating a input stream
         dis = new DataInputStream(socket.getInputStream());
 
+        //Creating an output stream
+        dout=new DataOutputStream(socket.getOutputStream());
+
+        //creating a stream to send object using the ouput stream
+        objectWriter=new ObjectOutputStream(dout);
+        
         //creating a stream to accept objects using the input stream
         objectReader = new ObjectInputStream(dis);
-//        
-//        //Creating an output stream
-//        dout=new DataOutputStream(socket.getOutputStream());
-//
-//        //creating a stream to send object using the ouput stream
-//        objectWriter=new ObjectOutputStream(dout);
+        
+        
     }
 
-    Packet_ receivepacket() {
-
-        Packet_ dummy = new Packet_();
-        return dummy;
+    Packet_ receivepacket() throws Exception {
+        
+        Packet_ packet_ = (Packet_)objectReader.readObject();
+        return packet_;
     }
 
-    void sendPacket(Packet_ p) {
+    void sendPacket(Packet_ packet)throws IOException{
+        objectWriter.writeObject(packet);
     }
 
     //adds the packet to the buffer
@@ -91,20 +94,19 @@ public class Server {
         return p;
     }//tested and working correctly
 
-    public void communicate() throws IOException, ClassNotFoundException {
-        
-        Packet_ p[]=new Packet_[10];
-        for (int i=0;i<10;i++)
-            p[i]=new Packet_();
-        
+    public void communicate() throws Exception {
         
         //read the object sent by the client
-        for(int i=0;i<10;i++)
+        while(true)
         {
-            Packet_ dummy = (Packet_) objectReader.readObject();
-            dummy.printPacketDetails();
+            Packet_ packet_ = receivepacket();
+            packet_.printPacketDetails();
+            if(packet_.getData()[0]==Character.MAX_VALUE)
+                break;
+            packet_=generateAck(packet_);
+            sendPacket(packet_);
         }
-
+        
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, Exception {
