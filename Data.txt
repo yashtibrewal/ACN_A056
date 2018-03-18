@@ -1,0 +1,1 @@
+It involves the simulation of the congesstion algorithim. The algorithm involves a slow start phase and a stead growth phase. The slow start invloves the incrementing of the value of the congession windows exponentially till the sender side threshold and then the growth is linear with a rate of 1/congession windowd size.
