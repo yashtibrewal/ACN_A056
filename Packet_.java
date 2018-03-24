@@ -4,9 +4,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public class Packet_ implements Serializable {
-
-    //using Packet_ becuase Packet already exixsts in jnetpcap library
-    private char data[] = new char[20];//data field
+    private char data[];
+    //data field
     //assume the size is fixed to 20 characters
 
     private int ack;//acknowledgement number
@@ -14,6 +13,17 @@ public class Packet_ implements Serializable {
     private boolean ackFlag;
     private boolean nAckFlag;
 
+    
+    Packet_() {
+        this.data = new char[20];
+        ackFlag = false;
+        ack = 0;
+        //making the characters in the packet 0
+        for (char d : data) {
+            d = Character.MIN_VALUE;
+        }
+    }
+    
     public void setnAckFlag(boolean nAckFlag) {
         this.nAckFlag = nAckFlag;
     }
@@ -30,15 +40,11 @@ public class Packet_ implements Serializable {
         return ackFlag;
     }
 
-    Packet_() {
-        ackFlag = false;
-        ack = 0;
-        //making the characters in the packet 0
-        for (char d : data) {
-            d = Character.MIN_VALUE;
-        }
+    static boolean samePacket(Packet_ packet_1,Packet_ packet_){
+        return packet_1.getSeq()==packet_.getSeq() && packet_.getAck()==packet_1.getAck()
+                    && Arrays.equals(packet_.getData(), packet_1.getData());
     }
-
+    
     public void printPacketDetails() {
         if (nAckFlag) {
             System.out.println("No acknowlegement received");

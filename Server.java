@@ -11,7 +11,6 @@ import java.net.Socket;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Server {
 
@@ -26,13 +25,14 @@ public class Server {
     DataOutputStream dout;
 
     public Server() throws IOException {
+        
         buffer_size = 10;
         //server socket where the client can connect
         Server_Buffer = new ArrayList<>();
         server_socket = new ServerSocket(6666);
         socket = server_socket.accept();//establishes connection
         System.out.println("Server Connected");
-        //Creating a input stream
+        //Creating an input stream
         dis = new DataInputStream(socket.getInputStream());
 
         //Creating an output stream
@@ -132,13 +132,14 @@ public class Server {
             
             
             //writing the received data to file
-            BufferedWriter bw=new BufferedWriter(new FileWriter(new File("D:\\Users\\Dell-7560\\Documents\\NetBeansProjects\\Advanced Computer Networking\\src\\Experiment7\\Output2.txt"),true));
+            BufferedWriter bw=new BufferedWriter(new FileWriter(new File("D:\\Users\\Dell-7560\\Documents\\NetBeansProjects\\Advanced Computer Networking\\src\\Experiment7\\Output2.txt"),true));//true denotes appending
             bw.write(charArrayToString(packet_.getData()));
             
-            
+            // user controlled acks sent
             
             packet_ = generateAck(packet_);
-            System.out.println("Send ack ? press 1 for yes and 2 for no");
+            sendPacket(packet_);
+            /*System.out.println("Send ack ? press 1 for yes and 2 for no");
             
             boolean flag=true;//for handling the user input
             while (flag) {
@@ -153,14 +154,16 @@ public class Server {
                         packet_.setnAckFlag(true);
                         packet_.setAckFlag(false);
                         sendPacket(packet_);
-                        System.out.println("------NAck not send for the above packet");
+                        System.out.println("------NAck send for the above packet");
                         flag=false;
                         break;
                     default:
                         System.out.println("------Wrong input");
                         break;
                 }
-            }
+            }*/
+            
+            
             bw.close();
         }
 
